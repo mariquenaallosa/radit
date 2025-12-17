@@ -22,8 +22,13 @@
 #define QVUMETER_H
 
 #include <QtGui>
-#include <QtDesigner/QDesignerExportWidget>
+//#include <QtDesigner/QDesignerExportWidget>
 #include <math.h>
+
+
+#ifndef QDESIGNER_WIDGET_EXPORT
+#define QDESIGNER_WIDGET_EXPORT
+#endif
 
 
 class QDESIGNER_WIDGET_EXPORT QVUMeter : public QWidget

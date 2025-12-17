@@ -9,6 +9,8 @@
  **/
 #include <QDebug>
 #include <QDockWidget>
+#include <QShortcut>
+#include <QSettings>
 
 #include "Player.h"
 #include "bass.h"
@@ -75,6 +77,34 @@ Player::Player(QString w_Prefijo, QMainWindow *parent )
     connect(BtnStopPlay,SIGNAL(clicked()),this, SLOT(ClickBtnStopPlay()));
     connect(BtnPisador,SIGNAL(clicked()),this, SLOT(ClickPisador()));
 
+    // Shortcuts for player controls
+    QSettings RaditIni("Radit.ini", QSettings::IniFormat);
+    QString defaultPlay, defaultStop, defaultNext, defaultPrev;
+    if (w_Prefijo == "Principal") {
+        defaultPlay = "Ctrl+P";
+        defaultStop = "Ctrl+S";
+        defaultNext = "Ctrl+N";
+        defaultPrev = "Ctrl+B";
+    } else if (w_Prefijo == "Aux1") {
+        defaultPlay = "Ctrl+Shift+P";
+        defaultStop = "Ctrl+Shift+S";
+        defaultNext = "Ctrl+Shift+N";
+        defaultPrev = "Ctrl+Shift+B";
+    } else if (w_Prefijo == "Aux2") {
+        defaultPlay = "Ctrl+Alt+P";
+        defaultStop = "Ctrl+Alt+S";
+        defaultNext = "Ctrl+Alt+N";
+        defaultPrev = "Ctrl+Alt+B";
+    }
+    QShortcut *shortcutPlay = new QShortcut(QKeySequence(RaditIni.value(w_Prefijo + "/ShortcutPlay", defaultPlay).toString()), this);
+    connect(shortcutPlay, SIGNAL(activated()), this, SLOT(ClickBtnStopPlay()));
+    QShortcut *shortcutStop = new QShortcut(QKeySequence(RaditIni.value(w_Prefijo + "/ShortcutStop", defaultStop).toString()), this);
+    connect(shortcutStop, SIGNAL(activated()), this, SLOT(ClickStop()));
+    QShortcut *shortcutNext = new QShortcut(QKeySequence(RaditIni.value(w_Prefijo + "/ShortcutNext", defaultNext).toString()), this);
+    connect(shortcutNext, SIGNAL(activated()), this, SLOT(ClickAlante()));
+    QShortcut *shortcutPrev = new QShortcut(QKeySequence(RaditIni.value(w_Prefijo + "/ShortcutPrev", defaultPrev).toString()), this);
+    connect(shortcutPrev, SIGNAL(activated()), this, SLOT(ClickAtras()));
+
     //combo modos
     connect(ComboModo, SIGNAL(currentIndexChanged(int)), this, SLOT(ClickModo()));
 
@@ -96,7 +126,7 @@ Player::Player(QString w_Prefijo, QMainWindow *parent )
 
     w_Stream = new  Stream(this);
 
-    w_Stream->SetVumeter(this->Vumeter);
+    //w_Stream->SetVumeter(this->Vumeter);
     w_Stream->SetLabel(this->Label);
     w_Stream->SetSlider(this->Slider);
     w_Stream->SetTitulo(this->LTitulo);
@@ -166,10 +196,10 @@ void Player::closeEvent(QCloseEvent *e)
  */
 void Player::ClickPlay()
 {
-   // w_Stream->Load("C:/discoteca/NOVEDADES DEL MES/KIKE GABANA - Dímelo Bajito.mp3");
+   // w_Stream->Load("C:/discoteca/NOVEDADES DEL MES/KIKE GABANA - Dï¿½melo Bajito.mp3");
 
 
-       //Start("C:/discoteca/NOVEDADES DEL MES/KIKE GABANA - Dímelo Bajito.mp3",false);
+       //Start("C:/discoteca/NOVEDADES DEL MES/KIKE GABANA - Dï¿½melo Bajito.mp3",false);
    // return;
 
     if(!w_Lista->rowCount())//if have zero elements on list
@@ -662,7 +692,7 @@ void Player::resizeEvent( QResizeEvent *event){
 
 }
 
-////////////Señal que viene del streamer///////////////////////
+////////////Seï¿½al que viene del streamer///////////////////////
 
 void Player::ClickPisadorIn(){
 

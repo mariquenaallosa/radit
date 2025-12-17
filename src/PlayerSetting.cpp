@@ -29,6 +29,7 @@ PlayerSetting::PlayerSetting(QString Modulo,QDialog *parent )
     this->setWindowTitle(this->windowTitle() + " [ " + Modulo.toLatin1() + " ]");
 
     connect(BtnSalir,SIGNAL(clicked()),this, SLOT(ClickSalir()));
+    connect(listWidget, SIGNAL(currentRowChanged(int)), stackedWidget, SLOT(setCurrentIndex(int)));
     w_Modulo=Modulo;
 
     AddDispositivo();
@@ -56,19 +57,19 @@ void PlayerSetting::AddDispositivo()
     BASS_DEVICEINFO i;
     QString nombre;
 
-    QString nulo(tr("Sin Sonido")); //añadimos nulo
+    QString nulo(tr("Sin Sonido")); //aï¿½adimos nulo
     this->Dispositivo->addItem(nulo);
 
     #ifdef Q_OS_UNIX
-      //  QString def(tr("Defecto")); //en linux añadimos otro el default
+      //  QString def(tr("Defecto")); //en linux aï¿½adimos otro el default
       //  this->Dispositivo->addItem(def);
     #endif
 
 
- //****************** añadimos las tarjetas de audio *****************************
+ //****************** aï¿½adimos las tarjetas de audio *****************************
     for (int c=1;BASS_GetDeviceInfo(c,&i);c++)// device 1 = el primer dispositivo
     {
-        if (i.flags&BASS_DEVICE_ENABLED)// enabled, lo añadimos...
+        if (i.flags&BASS_DEVICE_ENABLED)// enabled, lo aï¿½adimos...
                 this->Dispositivo->addItem(nombre.fromAscii(i.name));
     }
 }
@@ -104,6 +105,12 @@ void PlayerSetting::Establecer()
     //Pisador
     Transicion->setValue(RaditIni.value(w_Modulo + "/Transicion").toInt());
     Locucion->setValue(RaditIni.value(w_Modulo + "/Locucion").toFloat());
+
+    //Atajos
+    ShortcutPlay->setText(RaditIni.value(w_Modulo + "/ShortcutPlay", "Ctrl+P").toString());
+    ShortcutStop->setText(RaditIni.value(w_Modulo + "/ShortcutStop", "Ctrl+S").toString());
+    ShortcutNext->setText(RaditIni.value(w_Modulo + "/ShortcutNext", "Ctrl+N").toString());
+    ShortcutPrev->setText(RaditIni.value(w_Modulo + "/ShortcutPrev", "Ctrl+B").toString());
 }
 
 /**
@@ -128,6 +135,12 @@ void PlayerSetting::ClickSalir()
     //Pisador
     RaditIni.setValue(w_Modulo + "/Transicion",this->Transicion->value());
     RaditIni.setValue(w_Modulo + "/Locucion",this->Locucion->value());
+
+    //Atajos
+    RaditIni.setValue(w_Modulo + "/ShortcutPlay",this->ShortcutPlay->text());
+    RaditIni.setValue(w_Modulo + "/ShortcutStop",this->ShortcutStop->text());
+    RaditIni.setValue(w_Modulo + "/ShortcutNext",this->ShortcutNext->text());
+    RaditIni.setValue(w_Modulo + "/ShortcutPrev",this->ShortcutPrev->text());
 
     this->close();
 }

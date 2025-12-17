@@ -4,11 +4,10 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui widgets sql
 
 TARGET = radit
 TEMPLATE = app
-QT += sql
 CONFIG += release
 
 
@@ -49,6 +48,7 @@ SOURCES += main.cpp\
     EditorCunas.cpp \
     micelanea/CunaButton.cpp \
     engine/Cue.cpp \
+    ../lib/vumeter/QVUMeter-0.1/qvumeter.cpp \
     General.cpp
 
 HEADERS  += mainwindow.h \
@@ -89,6 +89,7 @@ HEADERS  += mainwindow.h \
     EditorCunas.h \
     micelanea/CunaButton.h \
     engine/Cue.h \
+    ../lib/vumeter/include/qvumeter.h \
     General.h
 
 FORMS    += mainwindow.ui \
@@ -116,8 +117,8 @@ FORMS    += mainwindow.ui \
 unix {
 
 LIBS += /usr/lib/libbass.so \
-       /usr/lib/libqvumeterplug.so \
-      /usr/lib/libtag.so.1
+       #/usr/lib/libqvumeterplug.so \
+      /usr/lib/x86_64-linux-gnu/libtag.so.1
 
 
 
@@ -132,6 +133,23 @@ DESTDIR = ../LinuxDesktop
 
 
 
+
+}
+
+win32 {
+
+LIBS += -L../lib/bass -lbass \
+        -L../lib/taglib -ltag \
+        -L../lib/vumeter -lqvumeter
+
+INCLUDEPATH = ../lib/bass/include \
+              ../lib/taglib/include \
+              ../lib/vumeter/include
+
+OBJECTS_DIR =../out_win
+MOC_DIR = ../out_win
+UI_DIR = ../out_win
+DESTDIR = ../WindowsDesktop
 
 }
 
